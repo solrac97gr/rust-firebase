@@ -23,7 +23,7 @@ async fn main() {
     };
 
     // Create the Firebase Instance
-    let firebase = Firebase::auth("https://myproject.firebaseio.com", "AUTH_KEY").unwrap();
+    let firebase = Firebase::new("https://myproject.firebaseio.com").unwrap();
 
     // Create the user
     let response = set_user(&firebase, &user).await;
