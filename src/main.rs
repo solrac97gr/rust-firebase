@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use firebase_rs::*;
 use serde::{Deserialize, Serialize};
 
@@ -17,9 +19,9 @@ struct Response {
 async fn main() {
     // Create the user
     let user = User {
-        name: "Paolo García".to_string(),
+        name: "Jhon Doe".to_string(),
         age: 25,
-        email: "carlos@test.com".to_string(),
+        email: "jhon.doe@mail.com".to_string(),
     };
 
     // Create the Firebase Instance
@@ -27,6 +29,10 @@ async fn main() {
 
     // Create the user
     let response = set_user(&firebase, &user).await;
+
+    // Get all users
+    let users = get_users(&firebase).await;
+    println!("{:?}", users);
     // Get the user
     let mut user = get_user(&firebase, &response.name).await;
     println!("{:?}", user);
@@ -46,6 +52,14 @@ async fn set_user(firebase_client: &Firebase, user: &User) -> Response {
     let firebase = firebase_client.at("users");
     let _users = firebase.set::<User>(&user).await;
     return string_to_reponse(&_users.unwrap().data);
+}
+
+// Get All users
+async fn get_users(firebase_client: &Firebase) -> HashMap<String,User> {
+    let firebase = firebase_client.at("users");
+    let users = firebase.get::<HashMap<String, User>>().await;
+    println!("{:?}", users);
+    return users.unwrap();
 }
 
 // Get a user
